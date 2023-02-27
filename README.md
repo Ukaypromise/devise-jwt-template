@@ -427,3 +427,32 @@ end
 ```
 Adding the `before_action :authenticate_user` will ensure that we only see a 200 response if we have a valid JWT in the headers. If we don't this endpoint should return a `401` status code.
 
+## API Testing
+
+Copy and past in the browser console. If everything works fine, you should get a token bearer.
+
+```b
+fetch("http://localhost:4000/signup", {
+  method: "post",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    user: {
+      email: "test@test0.com",
+      password: "password",
+    },
+  }),
+})
+  .then((res) => {
+    if (res.ok) {
+      console.log(res.headers.get("Authorization"));
+      localStorage.setItem("token", res.headers.get("Authorization"));
+      return res.json();
+    } else {
+      throw new Error(res);
+    }
+  })
+  .then((json) => console.dir(json))
+  .catch((err) => console.error(err));
+  ```
