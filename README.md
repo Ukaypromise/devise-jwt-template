@@ -495,3 +495,5 @@ fetch("http://localhost:3000/private/test", {
   .then((json) => console.dir(json))
   .catch((err) => console.error(err));
   ```
+### More Rails API only Learning Resources
+Checkout this article by [Michael Epelboim ](https://sdrmike.medium.com/rails-7-api-only-app-with-devise-and-jwt-for-authentication-1397211fb97c)
