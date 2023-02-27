@@ -456,3 +456,42 @@ fetch("http://localhost:4000/signup", {
   .then((json) => console.dir(json))
   .catch((err) => console.error(err));
   ```
+  You can test if users are logged in when they only have authorization to view certain pages of the webapp.
+  
+  for instance you can add a books to our app and only if users are logged in that they can see the books.
+  
+  ```b
+  rails g resource Book author title
+  ```
+We can then make our book controller to look like this:
+
+```
+class BookController < ApplicationController
+  before_action :authenticate_user!
+  def index
+    render json: {
+      message: "This is a private message for #{current_user.email} you should only see if you've got a correct token"
+    }
+  end
+end
+```
+And now, to test this out in the browser, you can run this:
+But note that, without our JWT, the request will be unauthorized if we have the `before_action :authenticate_user!` in our controller. So, now we can add the token in the header.
+
+```rb
+fetch("http://localhost:3000/private/test", {
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: localStorage.getItem("token"),
+  },
+})
+  .then((res) => {
+    if (res.ok) {
+      return res.json();
+    } else if (res.status == "401") {
+      throw new Error("Unauthorized Request. Must be signed in.");
+    }
+  })
+  .then((json) => console.dir(json))
+  .catch((err) => console.error(err));
+  ```
