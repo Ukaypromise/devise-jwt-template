@@ -1,5 +1,5 @@
 
-# Rails Devise JWT Tutorial
+# Rails Devise JWT Implementation
 
 
 ## Fast_jsonapi
