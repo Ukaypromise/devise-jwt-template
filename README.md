@@ -363,7 +363,15 @@ session you must first configure a session store):
 
 This is a bit frustrating, as in API only mode we’re not going to be using session cookies. This is an unfixed bug in Devise with Rails 7 at the moment. There’s an issue on the Devise-JWT repo that discusses this problem including a few fixes. My pick was to go with a fix that is focused on giving devise a fake rack session hash that has enabled? set to false to avoid the error that it would otherwise raise.
 
-To implement the fix, create a new file in controllers/concerns:
+There are two solutions to fix this. 
+First is adding the below lines of code to your devise.rb in your initializers file
+```rb
+  config.warden do |manager|
+    manager.scope_defaults :user, store: false
+  end
+```
+The second solution is a bit more complex which is -
+Create a new file in controllers/concerns:
 ```rb
 # app/controllers/concerns/rack_session_fix.rb
 module RackSessionFix
