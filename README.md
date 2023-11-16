@@ -363,7 +363,7 @@ session you must first configure a session store):
 
 This is a bit frustrating, as in API only mode we’re not going to be using session cookies. This is an unfixed bug in Devise with Rails 7 at the moment. There’s an issue on the Devise-JWT repo that discusses this problem including a few fixes. My pick was to go with a fix that is focused on giving devise a fake rack session hash that has enabled? set to false to avoid the error that it would otherwise raise.
 
-There are two solutions to fix this. 
+There are three solutions to fix this. 
 First is adding the below lines of code to your devise.rb in your initializers file
 ```rb
   config.warden do |manager|
@@ -403,6 +403,15 @@ class Users::RegistrationsController < Devise::RegistrationsController
   include RackSessionFix
   ...
 end
+```
+
+The third solution was found on https://github.com/waiting-for-dev/devise-jwt/issues/235#issuecomment-1116864740
+You can add the below code to your ` config/application.rb`
+
+```rb
+config.session_store :cookie_store, key: '_interslice_session'
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use config.session_store, config.session_options
 ```
 Now, we’ll be able to signup and login.
 
